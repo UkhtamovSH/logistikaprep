@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Logistikaga tayyorgarlik: 24 kunlik reja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF1EE;--surface:#FFFFFF;--soft:#F5F7F5;--text:#1E2322;--muted:#5C6865;--line:#D3D9D5;
+  --sign:#0E6B45;--sign-text:#FFFFFF;--amber:#E9A800;--done:#0E6B45;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#141817;--surface:#1D2322;--soft:#232A29;--text:#E6EBE8;--muted:#9AA6A2;--line:#2F3836;
+    --sign:#127A50;--sign-text:#F4F7F5;--amber:#F2B705;--done:#3FB47E;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141817;--surface:#1D2322;--soft:#232A29;--text:#E6EBE8;--muted:#9AA6A2;--line:#2F3836;
+  --sign:#127A50;--sign-text:#F4F7F5;--amber:#F2B705;--done:#3FB47E;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Overpass",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:780px;margin:0 auto;padding:20px 16px 48px}
+
+.sign{background:var(--sign);color:var(--sign-text);border-radius:12px;padding:20px 22px;border:3px solid var(--sign-text);box-shadow:0 0 0 3px var(--sign);margin:3px}
+.sign h1{margin:0;font-weight:800;font-size:clamp(1.6rem,5vw,2.3rem);line-height:1.1;letter-spacing:-.01em}
+.sign p{margin:6px 0 0;opacity:.92}
+.meter{display:flex;align-items:center;gap:12px;margin-top:16px}
+.bar{flex:1;height:10px;background:rgba(255,255,255,.25);border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--amber);width:0;transition:width .4s ease}
+.exit{background:var(--amber);color:#1E2322;font-weight:800;border-radius:6px;padding:3px 10px 1px;white-space:nowrap}
+
+.tabs{display:flex;gap:4px;margin:24px 0 18px;border-bottom:2px solid var(--line)}
+.tabs button{font:inherit;font-weight:600;background:none;border:0;color:var(--muted);padding:10px 14px 8px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button[aria-selected="true"]{color:var(--text);border-bottom-color:var(--amber)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+[hidden]{display:none!important}
+
+.dayhead{display:flex;align-items:flex-start;gap:14px;margin-bottom:10px}
+.marker{flex:none;width:58px;background:var(--sign);color:var(--sign-text);border-radius:6px;text-align:center;padding:5px 0 3px;font-weight:800;line-height:1.05;border:2px solid var(--sign-text);box-shadow:0 0 0 2px var(--sign);margin:2px}
+.marker small{display:block;font-weight:600;font-size:.72rem;opacity:.9}
+.marker span{font-size:1.6rem}
+.week{color:var(--muted);font-size:.92rem}
+h2{margin:2px 0 0;font-size:1.45rem;line-height:1.2}
+.schedule{color:var(--muted);font-size:.92rem;margin:0 0 18px}
+
+.blk{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:14px;overflow:hidden}
+.bh{display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--soft);border-bottom:1px solid var(--line);cursor:pointer}
+.bh input{width:22px;height:22px;accent-color:var(--done);flex:none;margin:0;cursor:pointer}
+.bh strong{flex:1;font-size:1.05rem}
+.bh em{font-style:normal;color:var(--muted);font-size:.9rem;white-space:nowrap}
+.blk.done .bh strong{text-decoration:line-through;color:var(--muted)}
+.bb{padding:14px 16px}
+.bb p{margin:0 0 10px}
+.bb p:last-child{margin-bottom:0}
+.how{color:var(--muted);font-size:.95rem}
+.bb ol.steps{margin:0 0 10px;padding-left:22px}
+.bb ol.steps li{margin-bottom:4px}
+pre{white-space:pre-wrap;font-family:inherit;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin:0 0 10px;font-size:.95rem}
+
+.tw{overflow-x:auto;margin:6px 0 4px}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;vertical-align:top;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600;font-size:.85rem}
+td:first-child{font-weight:600;white-space:nowrap}
+td.ex{color:var(--muted);font-style:italic}
+
+ol.ex{margin:0;padding-left:22px}
+ol.ex li{margin-bottom:14px}
+details{margin-top:6px}
+summary{cursor:pointer;color:var(--sign);font-weight:600;font-size:.92rem}
+:root[data-theme="dark"] summary{color:var(--done)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) summary{color:var(--done)}}
+.ans{margin-top:6px;padding:8px 12px;border-left:3px solid var(--amber);background:var(--soft);border-radius:4px;white-space:pre-wrap}
+
+.wpm{display:flex;align-items:center;gap:10px;margin-top:6px;flex-wrap:wrap}
+.wpm input{width:90px;font:inherit;padding:6px 10px 4px;border:2px solid var(--line);border-radius:6px;background:var(--surface);color:var(--text)}
+
+.complete{margin-top:4px;padding:10px 14px;border-left:4px solid var(--amber);background:var(--surface);border-radius:4px;font-weight:600}
+.navrow{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
+.btn{font:inherit;font-weight:600;padding:10px 16px 8px;border-radius:8px;border:2px solid var(--line);background:var(--surface);color:var(--text);cursor:pointer}
+.btn.primary{background:var(--sign);color:var(--sign-text);border-color:var(--sign)}
+.btn:disabled{opacity:.4;cursor:default}
+
+.wk{margin-bottom:22px}
+.wk h3{display:flex;justify-content:space-between;gap:10px;margin:0 0 8px;font-size:1rem}
+.wk h3 em{font-style:normal;color:var(--muted);font-weight:400}
+.tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+@media (max-width:560px){.tiles{grid-template-columns:repeat(3,1fr)}}
+.tile{text-align:left;padding:8px 9px 6px;border:1px solid var(--line);background:var(--surface);border-radius:6px;font:inherit;font-size:.8rem;line-height:1.25;color:var(--text);cursor:pointer;min-height:84px;display:flex;flex-direction:column;gap:4px}
+.tile b{font-size:1.05rem}
+.tile .p{margin-top:auto;color:var(--muted)}
+.tile.done{background:var(--sign);color:var(--sign-text);border-color:var(--sign)}
+.tile.done .p{color:var(--sign-text);opacity:.85}
+.tile.cur{outline:3px solid var(--amber);outline-offset:1px}
+
+.search{width:100%;font:inherit;padding:10px 14px 8px;border:2px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text);margin-bottom:6px}
+.glcount{color:var(--muted);font-size:.92rem;margin:0 0 12px}
+.term{display:flex;gap:12px;align-items:flex-start;padding:10px 14px;background:var(--surface);border:1px solid var(--line);border-radius:8px;margin-bottom:6px;cursor:pointer}
+.term input{width:20px;height:20px;accent-color:var(--done);flex:none;margin:3px 0 0}
+.term strong{display:block}
+.term span span{color:var(--muted);font-size:.95rem;display:block}
+.term small{color:var(--muted)}
+.term.known{opacity:.6}
+.empty{color:var(--muted)}
+
+.foot{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}
+.linkbtn{font:inherit;background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;padding:4px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="sign">
+    <h1>Logistikaga tayyorgarlik</h1>
+    <p>24 kun, kuniga 6 soat, haftasiga 6 kun. Har kuni nima qilishingiz aniq yozilgan.</p>
+    <div class="meter"><div class="bar"><i id="bar"></i></div><span class="exit" id="exit">0 / 24</span></div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="today">Bugun</button>
+    <button role="tab" aria-selected="false" data-tab="plan">Reja</button>
+    <button role="tab" aria-selected="false" data-tab="gloss">Lug'at</button>
+  </nav>
+
+  <section id="today"></section>
+  <section id="plan" hidden></section>
+  <section id="gloss" hidden>
+    <input class="search" id="q" type="search" placeholder="Qidirish, masalan: deadhead yoki TX" aria-label="Termin qidirish">
+    <p class="glcount" id="glcount"></p>
+    <div id="gllist"></div>
+  </section>
+
+  <div class="foot">
+    <span>Progress shu brauzerda saqlanadi.</span>
+    <button class="linkbtn" id="reset">Progressni tozalash</button>
+  </div>
+</div>
+
+<script>
+/* Har kuni: t sarlavha, l dars matni, k terminlar [inglizcha, o'zbekcha, misol], x mashqlar [savol, javob], p iboralar [inglizcha, o'zbekcha], s YouTube qidiruv so'zi */
+const WEEKS = [
+{t:"Asoslar, hujjatlar, hisob-kitob", d:[
+{t:"Sohadagi ishtirokchilar",
+ l:["AQSh yuk tashish tizimida 6 ta asosiy ishtirokchi bor. Har bir yuk shu zanjir orqali o'tadi.",
+ "<b>Shipper</b> — yukni jo'natuvchi kompaniya: zavod, ombor, ishlab chiqaruvchi. Masalan, mebel zavodi divanlarni do'konga yubormoqchi.",
+ "<b>Consignee</b> (yoki <b>receiver</b>) — yukni qabul qiluvchi: do'kon, distribyutsiya markazi, boshqa zavod.",
+ "<b>Broker</b> — vositachi. Shipperdan yukni oladi va uni tashiydigan carrier topadi. O'zining mashinasi yo'q, farqdan pul topadi: shipperdan $2,500 oladi, carrierga $2,100 to'laydi.",
+ "<b>Carrier</b> — yuk tashuvchi kompaniya (trucking kompaniya). Mashinalar va haydovchilar shuniki.",
+ "<b>Driver</b> — yuk mashinasi (truck) haydovchisi. Yukni olib, manzilga yetkazadi.",
+ "<b>Dispatcher</b> — carrier tomonida ishlaydi: haydovchi uchun yuk topadi, broker bilan narxni kelishadi, yo'l davomida haydovchini nazorat qiladi. Siz o'rganayotgan kasb aynan shu.",
+ "Zanjir: Shipper → Broker → Carrier (Dispatcher → Driver) → Consignee."],
+ k:[["Shipper","Yuk jo'natuvchi","The shipper is a furniture factory in Ohio."],["Consignee / Receiver","Yuk qabul qiluvchi","The receiver is a store in Dallas."],["Broker","Vositachi: yukni carrierga beradi","The broker found a truck for the load."],["Carrier","Yuk tashuvchi (trucking) kompaniya","Our carrier has 20 trucks."],["Driver","Haydovchi","The driver is on the way."],["Dispatcher","Haydovchiga yuk topuvchi va uni boshqaruvchi xodim","The dispatcher booked a load for the driver."]],
+ x:[["Vaziyat: Ohio'dagi mebel zavodi 20 ta divanni Dallas'dagi do'konga jo'natmoqchi. Zavod 'FastFreight' broker kompaniyasiga murojaat qiladi. 'Star Trucking' kompaniyasining xodimi Akmal bu yukni topib, haydovchi John'ga beradi. Bu yerda kim shipper, consignee, broker, carrier, dispatcher va driver?","Shipper: Ohio'dagi mebel zavodi\nConsignee: Dallas'dagi do'kon\nBroker: FastFreight\nCarrier: Star Trucking\nDispatcher: Akmal\nDriver: John"],
+ ["Har bir ishtirokchini inglizcha bitta gap bilan ta'riflang. Jami 6 ta gap yozasiz. Birinchisi namuna sifatida berilgan: 'A shipper is a company that sends goods.' Qolgan 5 tasini (consignee, broker, carrier, driver, dispatcher) o'zingiz yozing, keyin javob bilan solishtiring.","A consignee is a company that receives goods.\nA broker is a middleman who connects shippers and carriers.\nA carrier is a company that moves freight with its trucks.\nA driver is a person who drives the truck and delivers the load.\nA dispatcher is a person who finds loads for drivers and manages their trips."],
+ ["Broker shipperdan $3,000 oldi va carrierga $2,550 to'ladi. Broker qancha pul topdi?","$3,000 − $2,550 = $450"],
+ ["Zanjirni xotiradan qog'ozga yozing: yuk kimdan kimga o'tadi?","Shipper → Broker → Carrier (Dispatcher → Driver) → Consignee"]],
+ p:[["Hello, my name is [ismingiz].","Salom, mening ismim [ismingiz]."],["I'm calling from Star Trucking.","Men Star Trucking'dan qo'ng'iroq qilyapman."],["How can I help you?","Sizga qanday yordam bera olaman?"],["Could you repeat that, please?","Iltimos, qaytarib aytolasizmi?"],["Thank you, have a good day.","Rahmat, kuningiz yaxshi o'tsin."]],
+ s:"freight trucking explained shipper broker carrier"},
+{t:"Yuk hayot sikli",
+ l:["Har bir yuk bir xil bosqichlardan o'tadi. Dispetcher har bir bosqichda nima bo'layotganini bilishi shart.",
+ "1. Shipper yukni brokerga beradi.<br>2. Broker yukni load board'ga (yuk e'lonlari sayti) joylaydi.<br>3. Dispetcher yukni topadi, brokerga qo'ng'iroq qilib narxni kelishadi. Bu <b>booking</b> deyiladi.<br>4. Broker <b>Rate Confirmation</b> (shartnoma) yuboradi, dispetcher imzolaydi.<br>5. Haydovchi <b>pickup</b> joyiga boradi, yuk ortiladi, BOL imzolanadi.<br>6. Yuk yo'lda (<b>in transit</b>). Dispetcher brokerga holat haqida xabar berib turadi.<br>7. <b>Delivery</b>: yuk topshiriladi, POD imzolanadi.<br>8. POD va invoice brokerga yuboriladi.<br>9. Broker to'laydi (odatda 15–30 kun ichida)."],
+ k:[["Load","Yuk, buyurtma","We have a load from Chicago to Dallas."],["Book a load","Yukni band qilish (narxni kelishish)","I booked a load for tomorrow."],["Pickup (PU)","Yukni olish joyi yoki jarayoni","The pickup is at 8 AM."],["Delivery (DEL)","Yukni topshirish","The delivery is in Atlanta."],["In transit","Yo'lda (yuk bilan)","The load is in transit."],["ETA","Taxminiy yetib borish vaqti","Our ETA is 3 PM."]],
+ x:[["Bosqichlar aralashtirilgan. To'g'ri tartibga qo'ying: (a) POD imzolanadi, (b) dispetcher yukni topib narxni kelishadi, (c) broker to'laydi, (d) shipper yukni brokerga beradi, (e) rate con imzolanadi, (f) pickupda BOL imzolanadi, (g) broker yukni load board'ga joylaydi, (h) yuk yo'lda, (i) invoice yuboriladi.","d → g → b → e → f → h → a → i → c"],
+ ["Haydovchi yukni olgan va hozir yo'lda. Bu qaysi bosqich (inglizcha)?","In transit"],
+ ["Rate con pickupdan oldin imzolanadimi yoki keyinmi? Nega?","Oldin. Rate con imzolanmaguncha narx va shartlar rasman kelishilmagan bo'ladi."],
+ ["Bu gaplarni o'zbekchaga tarjima qiling: 'The pickup is tomorrow at 7 AM.' / 'The load is in transit.' / 'Our ETA is 5 PM.'","Pickup ertaga soat 7:00 da.\nYuk yo'lda.\nTaxminiy yetib borish vaqtimiz 17:00."]],
+ p:[["I'm calling about the load from Chicago to Dallas.","Chikagodan Dallasga yuk bo'yicha qo'ng'iroq qilyapman."],["Is this load still available?","Bu yuk hali bormi?"],["What is the pickup date?","Pickup sanasi qachon?"],["What time is the delivery appointment?","Delivery soat nechaga belgilangan?"],["Our ETA is 3 PM.","Taxminan 15:00 da yetib boramiz."]],
+ s:"truck dispatcher day in the life"},
+{t:"Asosiy hujjatlar",
+ l:["<b>Rate Confirmation (rate con)</b> — broker yuboradigan shartnoma: yuk qayerdan qayerga, sana, vaqt, narx, shartlar. Dispetcher imzolamaguncha yuk rasman sizniki emas.",
+ "<b>BOL (Bill of Lading)</b> — pickupda shipper beradigan yuk hujjati: nima, qancha, og'irligi. Haydovchi imzolaydi va o'zida saqlaydi.",
+ "<b>POD (Proof of Delivery)</b> — yuk yetkazilganini tasdiqlovchi hujjat. Ko'pincha bu qabul qiluvchi imzolagan BOL'ning o'zi. POD bo'lmasa, to'lov olinmaydi.",
+ "<b>Invoice</b> — brokerga yuboriladigan hisob-faktura: 'shu yuk uchun shuncha pul to'lang'.",
+ "<b>Seal</b> — trailer eshigiga qo'yiladigan raqamli plomba. Raqami BOL'da yoziladi va delivery'gacha buzilmasligi kerak.",
+ "Qisqa qoida: rate con → pickup (BOL) → delivery (POD) → invoice."],
+ k:[["Rate Confirmation (Rate Con)","Broker bilan narx va shartlar shartnomasi","Please send me the rate con."],["BOL (Bill of Lading)","Pickupda beriladigan yuk hujjati","The driver signed the BOL."],["POD (Proof of Delivery)","Yetkazilganlik tasdig'i","Please send the POD."],["Invoice","To'lov uchun hisob-faktura","I sent the invoice to the broker."],["Seal","Trailer eshigidagi raqamli plomba","What is the seal number?"],["Paperwork","Hujjatlar","The paperwork is ready."]],
+ x:[["Har bir hujjat qaysi bosqichda paydo bo'ladi: rate con, BOL, POD, invoice?","Rate con: booking'dan keyin, pickupdan oldin\nBOL: pickupda\nPOD: delivery'da\nInvoice: delivery'dan keyin"],
+ ["Haydovchi yukni topshirdi, lekin POD rasmini olmasdan ketib qoldi. Qanday muammo bo'ladi?","POD bo'lmasa broker to'lovni qilmaydi yoki kechiktiradi. Haydovchi POD rasmini darhol yuborishi kerak."],
+ ["Rate con'da qaysi ma'lumotlar bo'ladi? Kamida 5 tasini yozing.","Pickup va delivery manzillari, sana va vaqtlar, narx (rate), yuk turi va og'irligi, trailer turi, load raqami, qo'shimcha shartlar (masalan detention)."],
+ ["Google Rasmlar'da 'bill of lading example' va 'rate confirmation example' deb qidiring. Har bir hujjatdan 5 tadan maydonni topib yozing.","O'zingiz tekshirasiz. Masalan BOL'da: shipper, consignee, yuk tavsifi, og'irlik, seal raqami."]],
+ p:[["Please send me the rate confirmation.","Iltimos, rate con'ni yuboring."],["I signed the rate con and sent it back.","Rate con'ni imzolab qaytarib yubordim."],["Did the driver get the BOL?","Haydovchi BOL'ni oldimi?"],["Please send a picture of the POD.","Iltimos, POD rasmini yuboring."],["What is the seal number?","Plomba raqami nechchi?"]],
+ s:"bill of lading explained trucking"},
+{t:"Narx va masofa (RPM)",
+ l:["<b>Rate</b> — yuk uchun umumiy narx, masalan $2,000.",
+ "<b>RPM (rate per mile)</b> — bir mil uchun narx. Formula: <b>RPM = rate ÷ mil</b>. Dispetcher yuk yaxshi yoki yomonligini birinchi navbatda RPM bilan baholaydi.",
+ "<b>Loaded miles</b> — yuk bilan yuriladigan masofa. <b>Deadhead</b> — haydovchi pickupgacha bo'sh yuradigan masofa. Deadhead uchun hech kim pul to'lamaydi.",
+ "Shuning uchun haqiqiy RPM = rate ÷ (loaded + deadhead). Misol: rate $1,500, yukli 500 mil, bo'sh 100 mil → 1,500 ÷ 600 = $2.50. Yukli RPM esa $3.00 ko'rinadi, lekin bu aldamchi.",
+ "Qaysi RPM yaxshi ekani bozorga qarab o'zgaradi, buni ishda o'rgatishadi. Hozir sizning vazifangiz: hisobni tez va xatosiz qilish."],
+ k:[["Rate","Yuk uchun umumiy narx","The rate is $2,000."],["RPM (Rate per mile)","Bir mil uchun narx","This load pays $2.50 per mile."],["Loaded miles","Yuk bilan yuriladigan masofa","It's 800 loaded miles."],["Deadhead","Yuksiz (bo'sh) yuriladigan masofa","We have 60 miles of deadhead."],["All-in rate","Barcha qo'shimchalar kiritilgan umumiy narx","Is $2,200 an all-in rate?"],["Lowball","Juda past narx taklif qilish","The broker is lowballing us."]],
+ x:[["Rate $1,800, masofa 720 mil. RPM nechchi?","$1,800 ÷ 720 = $2.50"],["Rate $2,400, masofa 1,000 mil. RPM?","$2.40"],["Rate $950, masofa 380 mil. RPM?","$2.50"],
+ ["Rate $1,500, yukli 500 mil, deadhead 100 mil. Yukli RPM va haqiqiy RPM nechchi?","Yukli: 1,500 ÷ 500 = $3.00\nHaqiqiy: 1,500 ÷ 600 = $2.50"],
+ ["Ikki yuk bor. A: $2,000, 900 mil. B: $1,200, 450 mil. Qaysi birining RPM yuqori?","A: $2.22, B: $2.67. B yaxshiroq."],
+ ["Masofa 650 mil. Sizga kamida $2.80 RPM kerak. Minimal rate qancha bo'lishi kerak?","650 × 2.80 = $1,820"],
+ ["Rate $2,100, yukli 700 mil, deadhead 150 mil. Haqiqiy RPM?","2,100 ÷ 850 ≈ $2.47"]],
+ p:[["What's the rate on this load?","Bu yukning narxi qancha?"],["How many miles is it?","Necha mil?"],["That's too low for us.","Bu biz uchun juda past."],["We are 50 miles deadhead.","Bizda 50 mil bo'sh yo'l bor."],["Is that an all-in rate?","Bu hammasi kiritilgan narxmi?"]],
+ s:"truck dispatcher rate per mile explained"},
+{t:"Foiz, xarajat, daromad",
+ l:["<b>Gross</b> — umumiy tushum (yuklar uchun olingan pul). <b>Net</b> — xarajatlardan keyin qolgan pul.",
+ "Dispetcherlik xizmati ko'pincha gross'dan foiz oladi (<b>dispatch fee</b>), odatda 5–10%. Foiz formulasi: <b>summa × foiz ÷ 100</b>.",
+ "Eng katta xarajat — yoqilg'i (<b>fuel</b>). Formula: <b>yoqilg'i xarajati = mil ÷ MPG × gallon narxi</b>. MPG — bir gallon yoqilg'ida necha mil yuradi (truck uchun taxminan 6–7).",
+ "<b>Fuel surcharge</b> — yoqilg'i qimmatlashganda narxga qo'shiladigan qo'shimcha to'lov."],
+ k:[["Gross","Umumiy tushum","Our gross this week is $9,000."],["Net","Xarajatlardan keyingi sof foyda","The net is lower after fuel."],["Dispatch fee","Dispetcherlik xizmati haqi (foiz)","Our dispatch fee is 8%."],["Fuel","Yoqilg'i","Fuel is the biggest expense."],["MPG (miles per gallon)","Bir gallonda yuriladigan mil","The truck gets 6.5 MPG."],["Fuel surcharge","Yoqilg'i uchun qo'shimcha to'lov","Does the rate include fuel surcharge?"]],
+ x:[["$2,500 ning 10% i?","$250"],["$3,200 ning 8% i?","$256"],["Haftalik gross $8,000, dispatch fee 7%. Fee qancha?","$560"],
+ ["Masofa 1,000 mil, truck 6.5 MPG, yoqilg'i $3.80/gallon. Yoqilg'i xarajati?","1,000 ÷ 6.5 ≈ 153.8 gallon × $3.80 ≈ $585"],
+ ["Yuk $2,000, masofa 800 mil, 6.5 MPG, yoqilg'i $4.00/gallon. Yoqilg'idan keyin qancha qoladi?","800 ÷ 6.5 ≈ 123 gallon × $4 ≈ $492\n$2,000 − $492 = $1,508"],
+ ["Haftada 5 ta yuk: $1,800, $2,200, $1,500, $2,600, $1,900. Gross qancha? 10% fee qancha?","Gross: $10,000\nFee: $1,000"]],
+ p:[["What is your dispatch fee?","Dispetcherlik haqingiz qancha?"],["Our fee is ten percent of the gross.","Bizning haqimiz gross'ning 10 foizi."],["Fuel prices went up this week.","Bu hafta yoqilg'i qimmatladi."],["Does the rate include fuel surcharge?","Narxga yoqilg'i qo'shimchasi kiritilganmi?"],["We need a better rate to cover fuel.","Yoqilg'ini qoplash uchun yaxshiroq narx kerak."]],
+ s:"trucking cost per mile explained"},
+{t:"1-hafta takrorlash va test",
+ l:["Bugun yangi mavzu yo'q. Dars vaqtida (2 soat) 1–5 kunlarning dars matnlarini qayta o'qing va quyidagi testni javobga qaramasdan yeching. Keyin tekshiring va xato qilgan mavzuni qayta o'qing."],
+ k:[], x:[["Yukni kim jo'natadi?","Shipper"],["Brokerning o'z mashinalari bormi?","Yo'q, u vositachi."],["Dispetcher kim tomonida ishlaydi: broker yoki carrier?","Carrier"],["Pickupda qaysi hujjat imzolanadi?","BOL"],["To'lov olish uchun qaysi hujjat shart?","POD (va invoice)"],["$2,700 ÷ 900 mil = ?","$3.00"],["Deadhead nima?","Bo'sh (yuksiz) yurilgan masofa"],["$4,000 ning 6% i?","$240"],["Rate con qachon imzolanadi?","Booking'dan keyin, pickupdan oldin"],["ETA nima?","Taxminiy yetib borish vaqti"]],
+ p:[], s:"freight broker dispatcher phone call example"}
+]},
+{t:"AQSh geografiyasi", d:[
+{t:"G'arb shtatlari (West)",
+ l:["AQShda 50 ta shtat bor va ular 4 hududga bo'linadi: G'arb (West), O'rta G'arb (Midwest), Janub (South), Shimoli-Sharq (Northeast).",
+ "Dispetcherlar shtatlarni 2 harfli qisqartma bilan aytadi: 'IL to TX' = Illinoisdan Texasga. Shuning uchun har bir shtatning qisqartmasini va asosiy shahrini bilishingiz kerak.",
+ "G'arb — 13 shtat. Alyaska (AK) va Gavayi (HI) truck uchun deyarli ishlatilmaydi, faqat bilib qo'ying. Kaliforniya (CA) eng katta yuk bozorlaridan biri: Los Angeles portlari orqali Osiyodan kelgan tovarlar butun AQShga tarqaladi.",
+ "Ish tartibi: Google'da 'US map with state abbreviations' rasmini oching. Har bir shtatni xaritada toping, qisqartmasi va shahrini daftarga 3 martadan yozing."],
+ k:[["WA — Washington","Seattle",""],["OR — Oregon","Portland",""],["CA — California","Los Angeles, San Francisco, Fresno",""],["NV — Nevada","Las Vegas, Reno",""],["ID — Idaho","Boise",""],["MT — Montana","Billings",""],["WY — Wyoming","Cheyenne",""],["UT — Utah","Salt Lake City",""],["CO — Colorado","Denver",""],["AZ — Arizona","Phoenix",""],["NM — New Mexico","Albuquerque",""],["AK — Alaska","Anchorage",""],["HI — Hawaii","Honolulu",""]],
+ x:[["Xotiradan G'arbning 13 ta shtati qisqartmasini yozing.","WA, OR, CA, NV, ID, MT, WY, UT, CO, AZ, NM, AK, HI"],["Bu shaharlar qaysi shtatda: Denver, Phoenix, Boise, Reno, Albuquerque, Salt Lake City?","Denver — CO\nPhoenix — AZ\nBoise — ID\nReno — NV\nAlbuquerque — NM\nSalt Lake City — UT"],["Google'da 'blank US map printable' rasmini chop eting yoki qog'ozga chizing va G'arb shtatlarining qisqartmalarini o'z joyiga yozing.","Xarita bilan solishtiring. Maqsad: 13 tadan 13 ta."],["Dispetcher Kaliforniyadan Texasga yukni qanday aytadi?","'California to Texas' yoki qisqacha 'CA to TX'."]],
+ p:[["The load is from CA to TX.","Yuk Kaliforniyadan Texasga."],["Where is the pickup located?","Pickup qayerda joylashgan?"],["It's in Los Angeles, California.","Los Angeles, Kaliforniyada."],["How far is it from Phoenix?","Phoenix'dan qancha uzoqda?"],["The driver is near Denver.","Haydovchi Denver yaqinida."]],
+ s:"US states and regions explained"},
+{t:"O'rta G'arb (Midwest)",
+ l:["O'rta G'arb — 12 shtat. Chikago (IL) AQSh yuk tashishining markazi: ko'plab magistrallar va temir yo'llar shu yerda kesishadi, yuk juda ko'p.",
+ "Bu hududda qishda qor va muz ko'p. Qishda dispetcher ob-havoni kuzatishi va brokerga kechikish haqida oldindan aytishi kerak.",
+ "Ish tartibi kechagidek: xaritada toping, qisqartma va shaharni 3 martadan yozing."],
+ k:[["OH — Ohio","Columbus, Cleveland, Cincinnati",""],["IN — Indiana","Indianapolis",""],["IL — Illinois","Chicago",""],["MI — Michigan","Detroit",""],["WI — Wisconsin","Milwaukee",""],["MN — Minnesota","Minneapolis",""],["IA — Iowa","Des Moines",""],["MO — Missouri","Kansas City, St. Louis",""],["ND — North Dakota","Fargo",""],["SD — South Dakota","Sioux Falls",""],["NE — Nebraska","Omaha",""],["KS — Kansas","Wichita",""]],
+ x:[["Xotiradan O'rta G'arbning 12 ta shtati qisqartmasini yozing.","OH, IN, IL, MI, WI, MN, IA, MO, ND, SD, NE, KS"],["Bu shaharlar qaysi shtatda: Detroit, Omaha, Milwaukee, Indianapolis, Wichita, Minneapolis?","Detroit — MI\nOmaha — NE\nMilwaukee — WI\nIndianapolis — IN\nWichita — KS\nMinneapolis — MN"],["Kansas City qaysi shtatda? (ehtiyot bo'ling)","Asosan MO (Missouri). Chegaradagi qismi KS (Kansas) da ham bor."],["Bo'sh xaritaga G'arb va O'rta G'arb shtatlarini (25 ta) yozing.","Xarita bilan solishtiring."]],
+ p:[["The roads are icy, the driver will be late.","Yo'llar muzlagan, haydovchi kechikadi."],["There is a snowstorm in Minnesota.","Minnesotada qor bo'roni."],["Can we push the delivery to tomorrow?","Delivery'ni ertaga surib bo'ladimi?"],["The driver is safe and waiting.","Haydovchi xavfsiz joyda kutyapti."],["I will update you in an hour.","Bir soatdan keyin xabar beraman."]],
+ s:"truck driving in winter midwest"},
+{t:"Janub (South)",
+ l:["Janub — 16 shtat. Texas (TX) eng katta yuk bozorlaridan biri: Dallas, Houston, San Antonio va Meksika chegarasidagi Laredo.",
+ "Atlanta (GA) va Memphis (TN) — muhim distribyutsiya markazlari.",
+ "Florida (FL)ga yuk ko'p ketadi, lekin u yerdan chiqadigan yuk kam. Shuning uchun Floridadan qaytish yuki topish qiyin va arzon bo'ladi. Dispetcher buni hisobga oladi.",
+ "Diqqat: <b>LA</b> qisqartmasi Louisiana shtatini bildiradi, Los Angeles'ni emas."],
+ k:[["TX — Texas","Dallas, Houston, San Antonio, Laredo",""],["OK — Oklahoma","Oklahoma City",""],["AR — Arkansas","Little Rock",""],["LA — Louisiana","New Orleans",""],["MS — Mississippi","Jackson",""],["AL — Alabama","Birmingham",""],["TN — Tennessee","Memphis, Nashville",""],["KY — Kentucky","Louisville",""],["GA — Georgia","Atlanta, Savannah",""],["FL — Florida","Miami, Orlando, Jacksonville",""],["SC — South Carolina","Charleston",""],["NC — North Carolina","Charlotte",""],["VA — Virginia","Richmond",""],["WV — West Virginia","Charleston",""],["MD — Maryland","Baltimore",""],["DE — Delaware","Wilmington",""]],
+ x:[["Xotiradan Janubning 16 ta shtati qisqartmasini yozing.","TX, OK, AR, LA, MS, AL, TN, KY, GA, FL, SC, NC, VA, WV, MD, DE"],["LA qisqartmasi nimani bildiradi?","Louisiana shtatini"],["Charleston nomli shahar qaysi 2 shtatda bor?","SC (South Carolina) va WV (West Virginia)"],["Nega Floridaga yuk olib borish qulay, lekin qaytish qiyin?","Floridaga tovar ko'p kiradi, lekin u yerdan chiqadigan yuk kam. Qaytish yuklari kam va arzon."],["Bu shaharlar qaysi shtatda: Memphis, Louisville, Little Rock, Birmingham, Charlotte, Baltimore?","Memphis — TN\nLouisville — KY\nLittle Rock — AR\nBirmingham — AL\nCharlotte — NC\nBaltimore — MD"]],
+ p:[["The driver is heading to Atlanta, Georgia.","Haydovchi Atlanta, Georgiyaga ketyapti."],["Florida loads pay well, but it's hard to get out.","Florida yuklari yaxshi to'laydi, lekin chiqib ketish qiyin."],["Do you have anything going out of Florida?","Floridadan chiqadigan yukingiz bormi?"],["We need a load from Texas going north.","Texasdan shimolga ketadigan yuk kerak."],["What's the delivery address?","Delivery manzili qanday?"]],
+ s:"Texas trucking freight market"},
+{t:"Shimoli-Sharq va yuk markazlari",
+ l:["Shimoli-Sharq — 9 ta kichik shtat, lekin aholi juda zich. Yo'llar tor va tirband. Nyu-York shahriga kirish qiyin, ba'zi ko'priklar va ko'chalarga truck kira olmaydi. Ko'p haydovchilar NYC'ga borishni yoqtirmaydi.",
+ "Asosiy yuk markazlari (freight hubs) — eng ko'p yuk chiqadigan shaharlar: Los Angeles (CA), Chicago (IL), Dallas (TX), Houston (TX), Atlanta (GA), Memphis (TN), Columbus (OH), Indianapolis (IN), Harrisburg (PA). Ularni xaritada bilish shart."],
+ k:[["NY — New York","New York City, Buffalo",""],["NJ — New Jersey","Newark",""],["PA — Pennsylvania","Philadelphia, Pittsburgh, Harrisburg",""],["MA — Massachusetts","Boston",""],["CT — Connecticut","Hartford",""],["RI — Rhode Island","Providence",""],["VT — Vermont","Burlington",""],["NH — New Hampshire","Manchester",""],["ME — Maine","Portland",""]],
+ x:[["Xotiradan Shimoli-Sharqning 9 ta shtati qisqartmasini yozing.","NY, NJ, PA, MA, CT, RI, VT, NH, ME"],["Portland nomli shahar qaysi 2 shtatda bor?","OR (Oregon) va ME (Maine)"],["9 ta yuk markazini shtati bilan xotiradan yozing.","Los Angeles CA, Chicago IL, Dallas TX, Houston TX, Atlanta GA, Memphis TN, Columbus OH, Indianapolis IN, Harrisburg PA"],["Bo'sh xaritaga barcha 50 shtatni yozing.","Xarita bilan solishtiring. Xato qilganlaringizni daftarga alohida yozing."]],
+ p:[["The driver doesn't want to go to New York City.","Haydovchi Nyu-York shahriga borishni xohlamayapti."],["Is there truck parking near the receiver?","Qabul qiluvchi yaqinida truck to'xtash joyi bormi?"],["The driver needs a safe place to park.","Haydovchiga xavfsiz to'xtash joyi kerak."],["Traffic is heavy in New Jersey.","New Jersey'da tirbandlik kuchli."],["We'll be there first thing in the morning.","Ertalab birinchi bo'lib yetib boramiz."]],
+ s:"truck driving New York City"},
+{t:"Asosiy magistrallar (Interstate)",
+ l:["Interstate — shtatlararo tezyurar yo'llar, 'I-' bilan yoziladi.",
+ "Qoida 1: <b>juft raqam</b> — sharq-g'arb yo'nalishi (I-10, I-40, I-80). <b>Toq raqam</b> — shimol-janub (I-5, I-35, I-95).",
+ "Qoida 2: sharq-g'arb yo'llari janubdan shimolga qarab kattalashadi (I-10 eng janubda, I-90 eng shimolda). Shimol-janub yo'llari g'arbdan sharqqa kattalashadi (I-5 eng g'arbda, I-95 eng sharqda).",
+ "Quyidagi 8 ta magistralni Google Maps'da kuzatib chiqing va qaysi shaharlardan o'tishini yozing."],
+ k:[["I-5","G'arbiy qirg'oq: San Diego — Los Angeles — Sacramento — Portland — Seattle",""],["I-10","Eng janubiy: Los Angeles — Phoenix — El Paso — San Antonio — Houston — New Orleans — Jacksonville",""],["I-35","O'rta: Laredo — San Antonio — Dallas — Oklahoma City — Kansas City — Des Moines — Minneapolis",""],["I-40","Barstow (CA) — Albuquerque — Oklahoma City — Little Rock — Memphis — Nashville — Wilmington (NC)",""],["I-70","Utah — Denver — Kansas City — St. Louis — Indianapolis — Columbus — Baltimore",""],["I-80","San Francisco — Salt Lake City — Omaha — Des Moines — Chicago hududi — New Jersey",""],["I-90","Eng shimoliy: Seattle — Chicago — Cleveland — Buffalo — Boston",""],["I-95","Sharqiy qirg'oq: Miami — Jacksonville — Richmond — Baltimore — Philadelphia — New York — Boston",""]],
+ x:[["Los Angeles'dan Jacksonville (FL)ga qaysi magistral to'g'ridan-to'g'ri boradi?","I-10"],["Dallas'dan Minneapolis'ga?","I-35"],["Miami'dan Boston'ga?","I-95"],["Seattle'dan San Diego'ga?","I-5"],["Memphis'dan Oklahoma City'ga?","I-40"],["I-76 qaysi yo'nalishda: sharq-g'arbmi yoki shimol-janubmi?","Raqami juft, demak sharq-g'arb."]],
+ p:[["Take I-40 east.","I-40 bo'ylab sharqqa yuring."],["The driver is on I-80 near Omaha.","Haydovchi Omaha yaqinida I-80 da."],["There is an accident on I-95.","I-95 da avariya bo'lgan."],["Which exit is the receiver?","Qabul qiluvchi qaysi chiqishda?"],["The driver missed the exit.","Haydovchi chiqishni o'tkazib yubordi."]],
+ s:"US interstate highway system explained"},
+{t:"2-hafta takrorlash va test",
+ l:["Bugun yangi mavzu yo'q. Dars vaqtida 50 shtat va 8 magistralni qayta ishlang. Onlayn o'yin: seterra.com saytida 'US States' o'yinini 90% dan yuqori natijagacha o'ynang. Keyin quyidagi testni yeching."],
+ k:[], x:[["IL, GA, AZ, PA, MN qaysi shtatlar?","Illinois, Georgia, Arizona, Pennsylvania, Minnesota"],["Chicago, Atlanta, Phoenix, Boise, Omaha qaysi shtatda?","IL, GA, AZ, ID, NE"],["4 ta hududni ayting.","West, Midwest, South, Northeast"],["Juft raqamli magistral qaysi yo'nalishda?","Sharq-g'arb"],["Dallas'dan Kansas City'ga qaysi magistral?","I-35"],["Floridadan qaytishning qiyinligi nimada?","Chiqadigan yuk kam va arzon"],["LA qisqartmasi nima?","Louisiana"],["Eng shimoliy sharq-g'arb magistral qaysi?","I-90"]],
+ p:[], s:"truck dispatcher training geography"}
+]},
+{t:"Vaqt, o'lchov, trailer, qoidalar", d:[
+{t:"Vaqt zonalari",
+ l:["AQShning asosiy 4 vaqt zonasi: <b>Eastern (ET)</b>, <b>Central (CT)</b>, <b>Mountain (MT)</b>, <b>Pacific (PT)</b>. G'arbga qarab har biri 1 soat orqada: Nyu-York 12:00 → Chikago 11:00 → Denver 10:00 → Los Angeles 09:00.",
+ "<b>Daylight saving time (DST)</b>: martning 2-yakshanbasida soatlar 1 soat oldinga suriladi, noyabrning 1-yakshanbasida orqaga qaytadi. Arizona (AZ) DST'ga o'tmaydi.",
+ "Toshkent (UTC+5) DST'ga o'tmaydi. Toshkent bilan farq: Eastern — qishda 10, yozda 9 soat; Central — 11/10; Mountain — 12/11; Pacific — 13/12. Masalan, qishda Nyu-Yorkda 09:00 bo'lsa, Toshkentda 19:00. Shu sabab AQSh kompaniyalari Toshkentda kechqurun va tunda ishlaydi.",
+ "Ba'zi shtatlar ikki zonaga bo'lingan (masalan TX, TN, KY, FL, IN). Rate con'dagi vaqt doimo o'sha joyning mahalliy vaqti (local time)."],
+ k:[["ET (Eastern Time)","Sharqiy vaqt: NY, GA, FL, OH","The appointment is at 9 AM Eastern."],["CT (Central Time)","Markaziy vaqt: IL, TX, TN, MN","Chicago is on Central Time."],["MT (Mountain Time)","Tog' vaqti: CO, UT, NM, AZ","Denver is on Mountain Time."],["PT (Pacific Time)","Tinch okeani vaqti: CA, WA, OR, NV","LA is on Pacific Time."],["DST (Daylight Saving Time)","Yozgi vaqt (soat 1 soat oldinga)","DST starts in March."],["Local time","Mahalliy vaqt","The delivery is at 8 AM local time."]],
+ x:[["Los Angeles'da 09:00. Chikagoda soat nechchi?","11:00 (PT → CT: +2 soat)"],["Nyu-Yorkda 15:00. Denver'da?","13:00"],["Delivery Dallas'da 08:00 (qish). Toshkentda soat nechchi bo'ladi?","19:00 (Central bilan qishda 11 soat farq)"],["Yoz. Toshkentda 23:00. Chikagoda?","13:00 (yozda Central bilan 10 soat farq)"],["Yoz. Atlanta (ET) va Phoenix (AZ) o'rtasida necha soat farq?","3 soat (Arizona yozda ham soatni o'zgartirmaydi)"],["Pickup Chikagoda 14:00 da tugadi, Indianapolis'gacha 4 soat yo'l. Indianapolis (ET) vaqti bilan nechada yetadi?","14:00 + 4 = 18:00 Central = 19:00 Eastern"]],
+ p:[["What time zone is the receiver in?","Qabul qiluvchi qaysi vaqt zonasida?"],["Is that Central time or Eastern?","Bu Central vaqtmi yoki Eastern?"],["The appointment is at 8 AM local time.","Belgilangan vaqt mahalliy vaqt bilan 8:00."],["The driver will arrive at 7 PM Eastern.","Haydovchi Eastern vaqti bilan 19:00 da yetadi."],["Let me double-check the time.","Vaqtni yana bir tekshirib ko'ray."]],
+ s:"US time zones explained"},
+{t:"Masofa, tezlik, o'lchov birliklari",
+ l:["<b>Vaqt = masofa ÷ tezlik.</b> Truck tezligi 65–70 mil/soat bo'lsa ham, to'xtash va tirbandlik bilan o'rtacha 50 mil/soat deb hisoblang. Bir haydovchi kuniga taxminan 500–550 mil yuradi.",
+ "AQSh birliklari: 1 mil ≈ 1,6 km; 1 lbs (funt) ≈ 0,45 kg; 1 fut ≈ 30 sm. Harorat Farengeytda: 32°F = 0°C, 0°F ≈ −18°C. °C = (°F − 32) × 5 ÷ 9.",
+ "Truck cheklovlari: umumiy og'irlik (truck + trailer + yuk) 80,000 lbs gacha. Dry van'ga odatda 42,000–45,000 lbs yuk sig'adi. 53 futlik trailerga 26 ta standart palet sig'adi."],
+ k:[["Mile","Mil (≈1,6 km)","It's 600 miles."],["Pounds (lbs)","Funt (≈0,45 kg)","The load is 40,000 lbs."],["Feet (ft)","Fut (≈30 sm)","It's a 53 ft trailer."],["Fahrenheit (°F)","Farengeyt harorati","Set the reefer at 34°F."],["Pallet","Palet (yuk taglik)","There are 26 pallets."],["Gross weight","Umumiy og'irlik (truck + yuk)","Max gross weight is 80,000 lbs."]],
+ x:[["Masofa 600 mil, o'rtacha 50 mil/soat. Necha soat haydash kerak?","12 soat"],["Masofa 1,100 mil, kuniga 550 mil. Necha kun?","2 kun"],["40,000 lbs taxminan necha kg?","≈ 18,000 kg"],["500 km taxminan necha mil?","≈ 312 mil (500 ÷ 1,6)"],["Reefer harorati 34°F. Bu necha °C?","(34 − 32) × 5 ÷ 9 ≈ 1°C"],["Dry van yuk 46,000 lbs. Muammo bo'lishi mumkinmi?","Ha. Odatiy 42–45 ming lbs dan ko'p; truck og'irligi bilan 80,000 lbs dan oshishi mumkin. Tekshirish kerak."]],
+ p:[["How much does the load weigh?","Yuk qancha og'irlikda?"],["It's forty-two thousand pounds.","42 ming funt."],["How many pallets?","Nechta palet?"],["What temperature should the reefer be set at?","Reefer qaysi haroratga qo'yilishi kerak?"],["The driver can do about 550 miles a day.","Haydovchi kuniga 550 milga yaqin yura oladi."]],
+ s:"53 foot dry van trailer dimensions"},
+{t:"Trailer va yuk turlari",
+ l:["<b>Dry van</b> — yopiq quti, eng ko'p tarqalgan. Tashiydi: qadoqlangan oziq-ovqat, kiyim, mebel, texnika.",
+ "<b>Reefer</b> — sovutgichli trailer. Tashiydi: go'sht, sut, meva, muzlatilgan mahsulot. Haroratni doim ushlab turish shart.",
+ "<b>Flatbed</b> — ochiq platforma. Tashiydi: metall, yog'och, qurilish materiallari, uskunalar. Yuk zanjir va kamar bilan mahkamlanadi, ba'zan brezent (<b>tarp</b>) bilan yopiladi.",
+ "<b>Step deck</b> — pastlashtirilgan platforma, baland yuklar uchun.",
+ "<b>Power only</b> — faqat tyagach (truck) beriladi, trailer mijozniki.",
+ "<b>FTL</b> (Full Truckload) — butun trailer bitta mijozning yuki. <b>LTL</b> (Less Than Truckload) — kichik yuk, trailer bir necha mijoz o'rtasida bo'linadi.",
+ "<b>Hazmat</b> — xavfli yuk (kimyoviy moddalar, yonilg'i). Haydovchida maxsus ruxsat bo'lishi kerak."],
+ k:[["Dry van","Yopiq oddiy trailer","We run dry vans only."],["Reefer","Sovutgichli trailer","It's a reefer load at 34°F."],["Flatbed","Ochiq platformali trailer","Steel pipes go on a flatbed."],["Step deck","Past platformali trailer","This machine needs a step deck."],["Power only","Faqat truck, trailer mijozniki","It's a power only load."],["FTL / LTL","To'liq yuk / qisman yuk","This is an FTL shipment."],["Hazmat","Xavfli yuk","Is this load hazmat?"],["Tarp","Yukni yopadigan brezent","The load needs tarps."]],
+ x:[["Qaysi trailer kerak: muzlatilgan tovuq go'shti?","Reefer"],["Po'lat quvurlar?","Flatbed"],["Televizorlar qutilarda?","Dry van"],["Balandligi 10 fut bo'lgan qishloq xo'jaligi mashinasi?","Step deck"],["Mijozning o'z trailerini boshqa shaharga olib borish?","Power only"],["Faqat 4 ta palet yuk?","LTL"]],
+ p:[["What equipment do you need?","Qanday trailer kerak?"],["It's a 53-foot dry van.","53 futlik dry van."],["Is it a reefer load?","Bu reefer yukmi?"],["Does the load need tarps?","Yukka brezent kerakmi?"],["Is it hazmat?","Xavfli yukmi?"]],
+ s:"types of truck trailers explained"},
+{t:"HOS qoidalari (1-qism)",
+ l:["<b>HOS (Hours of Service)</b> — haydovchi qancha haydashi va qancha dam olishi kerakligini belgilaydigan federal qoidalar. Dispetcher buni bilmasa, bajarib bo'lmaydigan reja tuzadi.",
+ "Asosiy qoidalar:<br>• 10 soat ketma-ket dam olgandan keyin <b>11 soat</b> haydash mumkin.<br>• <b>14 soatlik oyna</b>: ish boshlangandan 14 soat o'tgach haydash taqiqlanadi. Tanaffus va kutishlar ham shu 14 soatga kiradi.<br>• 8 soat haydagandan keyin kamida <b>30 daqiqa tanaffus</b>.",
+ "Misol: haydovchi 06:00 da ishni boshladi. 14 soatlik oyna 20:00 da yopiladi. U 11 soatdan ko'p haydamaydi va 20:00 dan keyin umuman haydamaydi. Keyin 10 soat dam oladi."],
+ k:[["HOS (Hours of Service)","Haydash va dam olish vaqti qoidalari","He is running out of hours."],["11-hour rule","11 soatlik haydash chegarasi","He can drive 11 hours."],["14-hour window","14 soatlik ish oynasi","His 14-hour window ends at 8 PM."],["10-hour break","10 soatlik majburiy dam","He needs a 10-hour break."],["30-minute break","8 soat haydagandan keyingi tanaffus","He's on his 30-minute break."],["On duty","Ishda, lekin haydamayapti","He is on duty at the shipper."]],
+ x:[["Haydovchi 05:00 da boshladi. 14 soatlik oyna qachon yopiladi?","19:00"],["Haydovchi 07:00 da boshladi, pickupda 2 soat kutdi va 09:00 da hayday boshladi. Eng kechi bilan qachongacha hayday oladi?","Oyna 21:00 da yopiladi. 11 soat haydash + 30 daqiqa tanaffus = 20:30. Javob: 20:30 gacha."],["Haydovchi 8 soat haydadi. Endi nima qilishi kerak?","Kamida 30 daqiqa tanaffus"],["11 soat haydab bo'ldi, manzilgacha yana 2 soat qoldi. Nima qiladi?","10 soat dam oladi, keyin davom etadi."],["Masofa 700 mil, o'rtacha 50 mil/soat. Bir kunda yetadimi?","Yo'q. 14 soat haydash kerak, ruxsat esa 11 soat. Taxminan: 550 mil → 10 soat dam → qolgan 150 mil (3 soat)."]],
+ p:[["How many hours does the driver have left?","Haydovchida necha soat qoldi?"],["The driver is out of hours.","Haydovchining soatlari tugadi."],["He needs a ten-hour break.","Unga 10 soatlik dam kerak."],["He will start again at 6 AM.","U ertalab 6:00 da qayta boshlaydi."],["The driver is on his 30-minute break.","Haydovchi 30 daqiqalik tanaffusda."]],
+ s:"FMCSA hours of service rules explained"},
+{t:"HOS (2-qism) va ELD",
+ l:["<b>70 soat / 8 kun qoidasi</b>: ketma-ket 8 kun ichida jami 70 soatdan ortiq ishlab (haydash + boshqa ish) bo'lmaydi. Ba'zi kompaniyalar 60 soat / 7 kun qoidasida ishlaydi.",
+ "<b>34 soatlik restart</b>: haydovchi 34 soat ketma-ket dam olsa, 70 soat hisobi noldan boshlanadi.",
+ "<b>Sleeper berth</b>: 10 soatlik dam olishni kabinadagi yotoqda bo'lib olish mumkin (masalan 7 + 3). Aniq qoidalarni ishda o'rgatishadi.",
+ "<b>ELD</b> — haydash vaqtini avtomatik yozadigan qurilma. Statuslar: <b>Off duty</b> (dam), <b>Sleeper berth</b> (kabina yotog'ida dam), <b>Driving</b> (haydash), <b>On duty</b> (ishda, lekin haydamaydi: yuk ortish, yoqilg'i quyish, tekshirish).",
+ "Dispetcher ELD tizimida haydovchining qolgan soatlarini ko'rib, reja va ETA tuzadi."],
+ k:[["70-hour rule","8 kunda 70 soat chegarasi","He has 10 hours left on his 70."],["34-hour restart","34 soatlik to'liq dam (hisobni nollaydi)","He's taking a 34-hour restart."],["Sleeper berth","Kabinadagi yotoq / dam statusi","He is in the sleeper berth."],["ELD","Elektron haydash vaqti qayd qurilmasi","Check his hours on the ELD."],["Off duty","Ishdan tashqari (dam)","He is off duty now."],["Driving","Haydash statusi","His status shows driving."]],
+ x:[["Haydovchi so'nggi 7 kunda 66 soat ishladi. 8-kunda necha soat ishlay oladi?","4 soat"],["70 soat tugadi. Tezroq qayta ishlash uchun nima qiladi?","34 soatlik restart"],["Yuk ortilayotganda haydovchining statusi qanday?","On duty"],["Kabinada uxlayapti. Status?","Sleeper berth"],["ELD dispetcherga nima uchun kerak?","Qolgan soatlarni ko'rib, realistik reja va to'g'ri ETA berish uchun."]],
+ p:[["Can you check his ELD?","Uning ELD'sini tekshira olasizmi?"],["He has 6 hours on his clock.","Unda 6 soat qolgan."],["He's taking a 34-hour reset.","U 34 soatlik dam olyapti."],["His status shows sleeper berth.","Statusi sleeper berth ko'rsatyapti."],["He is on duty, loading at the shipper.","U ishda, shipperda yuk ortilyapti."]],
+ s:"ELD logbook explained trucking"},
+{t:"DOT, FMCSA va 3-hafta testi",
+ l:["<b>FMCSA</b> — AQSh yuk tashish xavfsizligi bo'yicha federal idora. HOS va boshqa qoidalarni shu idora nazorat qiladi.",
+ "<b>USDOT raqam</b> — har bir tijorat yuk tashuvchi kompaniyaning ro'yxat raqami. <b>MC raqam</b> — pul evaziga shtatlararo yuk tashish ruxsati (operating authority). Brokerlar carrier'ni shu raqamlar orqali tekshiradi.",
+ "safer.fmcsa.dot.gov saytida istalgan kompaniyani DOT yoki MC raqami bo'yicha tekshirish mumkin: ruxsati faolmi, nechta mashina, xavfsizlik ma'lumotlari.",
+ "Broker bilan ishlashdan oldin carrier <b>carrier packet</b> (hujjatlar to'plami) to'ldiradi va sug'urta hujjatini (<b>COI</b>) yuboradi."],
+ k:[["FMCSA","Yuk tashish xavfsizligi federal idorasi","FMCSA sets the HOS rules."],["USDOT number","Kompaniyaning ro'yxat raqami","What's your DOT number?"],["MC number","Tijorat tashish ruxsati raqami","Our MC number is 123456."],["Operating authority","Yuk tashish ruxsati","Our authority is active."],["COI (Certificate of Insurance)","Sug'urta guvohnomasi","I'll send you our COI."],["Carrier packet","Broker uchun carrier hujjatlari to'plami","Please fill out the carrier packet."]],
+ x:[["SAFER saytida istalgan katta trucking kompaniyasini nomi bo'yicha qidiring. DOT raqami, mashinalar soni (Power Units) va haydovchilar sonini yozing.","O'zingiz tekshirasiz."],["Broker 'What's your MC?' deb so'radi. Nimani so'rayapti?","Carrier'ning MC raqamini"],["3-hafta testi: 11 soat, 14 soat, 10 soat, 30 daqiqa, 70 soat, 34 soat — har biri nimani anglatadi?","11 — maksimal haydash\n14 — ish oynasi\n10 — majburiy dam\n30 daq — 8 soatdan keyingi tanaffus\n70 — 8 kunlik chegara\n34 — restart"],["Yoz. Denver'da 10:00. Toshkentda soat nechchi?","21:00 (yozda Mountain bilan 11 soat farq)"],["Muzlatilgan baliq, 38,000 lbs. Qaysi trailer va taxminan necha kg?","Reefer, ≈ 17,100 kg"]],
+ p:[["What's your MC number?","MC raqamingiz qanday?"],["Please send me your carrier packet.","Iltimos, carrier packet'ingizni yuboring."],["I'll email you our COI.","Sug'urta hujjatimizni emailga yuboraman."],["Our authority is active.","Ruxsatimiz faol."],["We are set up with your company.","Biz sizning kompaniyangizda ro'yxatdan o'tganmiz."]],
+ s:"what is MC number and DOT number"}
+]},
+{t:"Amaliyot va ishga kirish", d:[
+{t:"Load board va Google Sheets",
+ l:["<b>Load board</b> — brokerlar yuk e'lon qiladigan sayt. Eng mashhurlari: DAT va Truckstop. E'londa bo'ladi: origin (qayerdan), destination (qayerga), pickup sanasi, trailer turi, og'irlik, ba'zan narx, broker telefon raqami va qancha kunda to'lashi.",
+ "Dispetcherning kundalik ishi: load board'da filtr qo'yish (masalan: Dallas atrofida 100 mil, dry van, ertangi sana) → mos yuklarni topish → RPM hisoblash → brokerga qo'ng'iroq.",
+ "Google Sheets'da yuk jadvali — ishdagi asosiy vosita. Bugun uni noldan tuzasiz."],
+ k:[["Load board","Yuk e'lonlari sayti","I found it on the load board."],["Origin","Jo'nash joyi","Origin is Dallas, TX."],["Destination","Manzil","Destination is Atlanta, GA."],["Equipment","Trailer turi","Equipment: dry van."],["Commodity","Yuk nima (tovar turi)","What's the commodity?"],["Days to pay","Broker necha kunda to'lashi","This broker's days to pay is 25."]],
+ x:[["Google Sheets'da jadval yarating. Ustunlar: A — Sana, B — Origin, C — Destination, D — Mil, E — Rate, F — RPM. 10 qatorni o'ylab topilgan ma'lumot bilan to'ldiring.","F2 katakka =E2/D2 yozing va pastga torting. Hamma qatorda RPM chiqishi kerak."],["Jami rate va o'rtacha RPM ni formulada chiqaring.","Jami: =SUM(E2:E11)\nO'rtacha: =AVERAGE(F2:F11)"],["RPM 2 dan past qatorlarni qizil qiling.","F ustunini belgilang → Format → Conditional formatting → 'Less than' → 2 → qizil rang."],["YouTube'da 'DAT load board tutorial' videosini ko'ring. Qidiruvda qanday filtrlar borligini yozing.","Origin, destination, radius (deadhead), equipment, sana, uzunlik, og'irlik."]],
+ p:[["I found your load on DAT.","Yukingizni DAT'da topdim."],["Is it still available?","Hali bormi?"],["What's the weight and commodity?","Og'irligi va tovar turi qanday?"],["Can the driver pick up tomorrow morning?","Haydovchi ertaga ertalab olsa bo'ladimi?"],["Please book it for us.","Iltimos, bizga band qiling."]],
+ s:"DAT load board tutorial for dispatchers"},
+{t:"Inglizcha email yozish",
+ l:["Ishning katta qismi email orqali bo'ladi: rate con so'rash, hujjat yuborish, kechikish haqida xabar. Email qisqa va aniq bo'lishi kerak. Mavzu (subject) qatoriga doim load raqamini yozing.",
+ "Namuna 1, rate con so'rash:<pre>Subject: Load #48213 – Rate Con\n\nHi John,\n\nThank you for the load. Please send the rate confirmation to this email.\n\nMC: 123456\nTruck: 101\nDriver: Mike, (555) 123-4567\n\nThanks,\n[Ismingiz]\nStar Trucking</pre>",
+ "Namuna 2, kechikish:<pre>Subject: Load #48213 – Delay Update\n\nHi John,\n\nThe driver had a flat tire near Memphis. It is fixed now.\nNew ETA: 5 PM local time.\nSorry for the delay.\n\nThanks,\n[Ismingiz]</pre>"],
+ k:[["Subject","Email mavzusi","Put the load number in the subject."],["Load #","Yuk raqami","Load #48213 is delivered."],["Please find attached","Ilova qilingan (hujjat)","Please find the POD attached."],["ASAP","Iloji boricha tez","Please send it ASAP."],["Update","Yangilangan ma'lumot","Here is a quick update."],["Flat tire","Teshilgan shina","The driver has a flat tire."]],
+ x:[["O'zingiz email yozing: Load #55120, brokerga rate con so'rash. Haydovchi: David, truck 205.","Namuna:\nSubject: Load #55120 – Rate Con\nHi, thank you for the load. Please send the rate confirmation. MC: 123456, Truck: 205, Driver: David. Thanks, [Ismingiz]"],["Email: Load #55120, yuk topshirildi, POD ilova qilingan.","Namuna:\nSubject: Load #55120 – POD\nHi, the load was delivered. Please find the POD attached. Thanks, [Ismingiz]"],["Email: Load #55120, tirbandlik sabab 2 soat kechikish, yangi ETA 4 PM.","Namuna:\nSubject: Load #55120 – Delay Update\nHi, the driver is stuck in heavy traffic. New ETA is 4 PM local time. Sorry for the delay. Thanks, [Ismingiz]"]],
+ p:[["Please find the POD attached.","POD ilova qilingan."],["Sorry for the delay.","Kechikish uchun uzr."],["The driver had a flat tire.","Haydovchining shinasi teshildi."],["New ETA is 5 PM.","Yangi ETA 17:00."],["Let me know if you need anything else.","Yana biror narsa kerak bo'lsa, ayting."]],
+ s:"professional email writing English business"},
+{t:"Broker bilan qo'ng'iroq va savdolashish",
+ l:["Qo'ng'iroq tartibi: 1) o'zingizni tanishtirib, MC raqamni aytasiz; 2) qaysi yuk ekanini aytasiz; 3) tafsilotlarni so'raysiz (og'irlik, tovar, vaqtlar); 4) narxni so'raysiz; 5) o'z narxingizni aytasiz (counter offer); 6) kelishsangiz, rate con so'raysiz.",
+ "Savdolashish qoidasi: birinchi taklif qilingan narxni darhol qabul qilmang. RPM ni hisoblang, o'z narxingizni ayting va sabab qo'shing (deadhead, tez yetkazish, ishonchli haydovchi).",
+ "Namuna dialog:<pre>You: Hi, this is [ismingiz] from Star Trucking, MC 123456. I'm calling about your load from Dallas to Atlanta.\nBroker: Sure. It picks up tomorrow at 8 AM, delivers the next day.\nYou: What's the weight and commodity?\nBroker: 38,000 lbs, paper products.\nYou: What's the rate?\nBroker: $1,700.\nYou: It's about 780 miles. Can you do $2,000?\nBroker: I can do $1,850.\nYou: Let's meet at $1,900 and we can book it now.\nBroker: OK, $1,900.\nYou: Deal. Please send the rate con to my email.</pre>"],
+ k:[["Counter offer","Qarshi narx taklifi","I made a counter offer of $2,000."],["Best rate","Eng yaxshi narx","What's your best rate?"],["Meet in the middle","O'rtasida kelishish","Let's meet in the middle."],["Firm","Narx qat'iy, o'zgarmaydi","The rate is firm."],["Book it","Band qilish","Let's book it."],["Deal","Kelishdik","Deal. Send me the rate con."]],
+ x:[["Yuk: Chicago → Columbus, 360 mil, broker $900 taklif qildi. Sizga kamida $2.80 RPM kerak. Qancha so'raysiz?","360 × 2.80 = $1,008. So'rash: $1,050–1,100, minimal $1,008."],["Yuqoridagi namunadek Chicago → Columbus yuki uchun o'z dialogingizni noldan yozing (kamida 8 gap).","Namunadagi tartibni tekshiring: tanishtiruv + MC → yuk → tafsilotlar → narx → counter offer → kelishuv → rate con."],["Dialogingizni ovoz chiqarib 5 marta o'qing va telefonga yozing.","Yozuvni tinglab: tez gapirdingizmi, raqamlar aniq eshitildimi?"]],
+ p:[["Hi, this is [ismingiz] from Star Trucking, MC 123456.","Salom, men Star Trucking'dan [ismingiz], MC 123456."],["I'm calling about your load from Dallas to Atlanta.","Dallasdan Atlantaga yukingiz bo'yicha qo'ng'iroq qilyapman."],["What's the best you can do?","Eng yaxshi qancha bera olasiz?"],["Can you do 2,300?","2,300 bera olasizmi?"],["Deal. Please send the rate con.","Kelishdik. Iltimos, rate con'ni yuboring."]],
+ s:"truck dispatcher negotiation call with broker"},
+{t:"Haydovchi, update va qo'shimcha to'lovlar",
+ l:["<b>Check call</b> — yuk yo'lda ekan, broker holat haqida xabar kutadi. Update qisqa bo'ladi: qayerda, qachon yetadi. Masalan: 'Driver is 50 miles out, ETA 3 PM.'",
+ "Asosiy update'lar: arrived at shipper (shipperga yetdi) → loaded (yuk ortildi) → rolling (yo'lga chiqdi) → yo'ldagi update'lar → arrived at receiver → empty (bo'shadi).",
+ "Qo'shimcha to'lovlar (accessorials):<br>• <b>Detention</b> — uzoq kutgani uchun to'lov, odatda 2 soat bepul kutishdan keyin boshlanadi.<br>• <b>Layover</b> — haydovchi bir kunga qolib ketgani uchun to'lov.<br>• <b>TONU</b> — yuk oxirgi daqiqada bekor qilinganda to'lov.<br>• <b>Lumper</b> — yuk tushirish xizmati to'lovi.",
+ "Detention olish uchun haydovchining kelgan va ketgan vaqti hujjatda yozilgan bo'lishi kerak."],
+ k:[["Check call","Holat haqida qo'ng'iroq/xabar","Time for a check call."],["Rolling","Yo'lga chiqdi, harakatda","Driver is loaded and rolling."],["Detention","Kutish uchun to'lov","We're asking for detention."],["Layover","Bir kunga qolib ketish to'lovi","The driver got a layover."],["TONU (Truck Ordered Not Used)","Bekor qilingan yuk uchun to'lov","The load cancelled, we need TONU."],["Lumper","Yuk tushirish xizmati to'lovi","The lumper fee was $150."],["Breakdown","Mashina buzilishi","The truck had a breakdown."]],
+ x:[["Haydovchi Atlanta'dan 80 mil uzoqda, 15:30 da yetadi. Update yozing.","Driver is 80 miles out, ETA 3:30 PM."],["Haydovchi shipperda 4 soat kutdi. Qaysi to'lov va necha soat uchun?","Detention, 2 soat uchun (2 soat bepul)."],["Haydovchi shipperga keldi, lekin yuk bekor qilindi. Qaysi to'lov?","TONU"],["Haydovchi 'yuk ortildi, yo'lga chiqdim' dedi. Brokerga inglizcha update yozing.","Driver is loaded and rolling. ETA to the receiver is [vaqt]."],["Mashina buzildi. Brokerga xabar yozing.","The truck broke down near [joy]. A mechanic is on the way. I will send a new ETA as soon as possible."]],
+ p:[["Driver is 50 miles out, ETA 3 PM.","Haydovchi 50 mil uzoqda, ETA 15:00."],["Driver arrived at the shipper.","Haydovchi shipperga yetib keldi."],["Driver is loaded and rolling.","Yuk ortildi, haydovchi yo'lda."],["We've been waiting for 3 hours.","Biz 3 soatdan beri kutyapmiz."],["The truck broke down, a mechanic is on the way.","Mashina buzildi, mexanik yo'lda."]],
+ s:"truck dispatcher check call example"},
+{t:"Rezyume va intervyu savollari",
+ l:["Rezyume 1 sahifa, inglizcha. Tartib: ism va kontaktlar → qisqa maqsad (2 gap) → ko'nikmalar → tajriba (har qanday ish) → ta'lim → tillar.",
+ "Ko'nikmalar bo'limiga yozing: English (darajangiz), Google Sheets, typing speed (WPM natijangiz), US geography, HOS rules, ready for night shifts.",
+ "Intervyuda deyarli doim so'raladigan savollar quyidagi mashqlarda. Har biriga javobni yozib, yod oling."],
+ k:[["Night shift","Tungi smena","I'm ready for night shifts."],["Fast learner","Tez o'rganuvchi","I'm a fast learner."],["Under pressure","Bosim ostida","I work well under pressure."],["Attention to detail","Mayda narsalarga e'tibor","Attention to detail is important in dispatch."],["Problem solving","Muammo hal qilish","Dispatch is about problem solving."]],
+ x:[["Rezyumeni yozing (1 sahifa, yuqoridagi tartibda).","Tekshiring: 1 sahifami, ko'nikmalar bo'limida WPM bormi, xatolar yo'qmi?"],["'Tell me about yourself' — 1 daqiqalik javob yozing.","Namuna: My name is [ism]. I'm from Tashkent. I have studied US logistics: dispatch, HOS rules, geography and rates. My English is good and I type [WPM] words per minute. I'm a fast learner and ready to work night shifts."],["'Why do you want to work in logistics?'","Namuna: Logistics is a fast-growing field. I like solving problems and working with people, and I want to build a career in this industry."],["'Can you work night shifts?'","Namuna: Yes, I'm ready to work night shifts. I have already adjusted my schedule."],["'What are your strengths?'","Namuna: I learn fast, I stay calm under pressure, and I pay attention to details."]],
+ p:[["Tell me about yourself.","O'zingiz haqingizda gapirib bering."],["I'm a fast learner.","Men tez o'rganaman."],["I'm ready to work night shifts.","Tungi smenada ishlashga tayyorman."],["I stay calm under pressure.","Bosim ostida xotirjam qolaman."],["I'm interested in logistics because I like solving problems.","Logistikaga qiziqaman, chunki muammo hal qilishni yoqtiraman."]],
+ s:"truck dispatcher job interview questions"},
+{t:"Mock intervyu va ariza yuborish",
+ l:["Bugun ishga kirishning oxirgi tayyorgarligi. Dars vaqtida to'liq intervyu mashqini qiling: do'st yoki Claude sizga savol beradi, siz inglizcha javob berasiz va yozib olasiz.",
+ "Keyin birinchi arizalarni yuboring: hh.uz, Telegram'dagi logistika vakansiya kanallari, LinkedIn. Arizalarni jadvalda yuriting: kompaniya, lavozim, sana, holat.",
+ "Shundan keyin har kuni: 5–10 ta ariza + 2 soat ingliz tili + 30 daqiqa typing + 1 soat takrorlash."],
+ k:[],
+ x:[["Ssenariy savol: 'The driver is late for pickup. What do you do?'","Namuna: I call the driver to get his location and new ETA, then I inform the broker right away and ask if the appointment can be moved."],["'The broker offers a very low rate. What do you say?'","Namuna: I calculate the RPM, explain our costs and make a counter offer. If the rate is still too low, I politely decline and look for another load."],["'The driver ran out of hours 100 miles before delivery. What do you do?'","Namuna: I tell the broker immediately, give a new ETA after his 10-hour break, and ask to reschedule the delivery."],["Texnika tekshiruvi: noutbuk, quloqchin, mikrofon, internet tezligi (fast.com).","Mikrofon toza eshitiladimi? Internet kamida 20 Mbps bo'lsin."],["Bugun 5 ta ariza yuboring va jadvalga yozing.","Jadvalda 5 qator bo'lishi kerak."]],
+ p:[], s:"truck dispatcher mock interview"}
+]}
+];
+
+const BLOCKS = [
+ {id:"typ", name:"Tez yozish", time:"30 daqiqa"},
+ {id:"voc", name:"Lug'at", time:"45 daqiqa"},
+ {id:"les", name:"Mavzu darsi va mashqlar", time:"2 soat"},
+ {id:"eng", name:"Ingliz tili", time:"2 soat"},
+ {id:"rev", name:"Takrorlash", time:"45 daqiqa"}
+];
+
+const days = [];
+WEEKS.forEach((w,wi)=>w.d.forEach(d=>days.push(Object.assign({n:days.length+1,wi,week:w.t},d))));
+const TOTAL = days.length;
+
+const KEY = "logistika-reja-v2";
+let S = {c:{},k:{},w:{},cur:null};
+try{ const raw = localStorage.getItem(KEY); if(raw){ S = Object.assign(S, JSON.parse(raw)); } }catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+function ids(d){ return BLOCKS.map(b=>d.n+"-"+b.id); }
+function doneCount(d){ return ids(d).filter(id=>S.c[id]).length; }
+function isDone(d){ return doneCount(d)===BLOCKS.length; }
+function firstOpen(){ const d = days.find(x=>!isDone(x)); return d ? d.n : TOTAL; }
+if(!S.cur || S.cur<1 || S.cur>TOTAL) S.cur = firstOpen();
+
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+function renderHeader(){
+  const n = days.filter(isDone).length;
+  $("#bar").style.width = (n/TOTAL*100)+"%";
+  $("#exit").textContent = n+" / "+TOTAL+" kun";
+}
+
+function block(d,b,inner){
+  const id = d.n+"-"+b.id, on = !!S.c[id];
+  return '<section class="blk'+(on?' done':'')+'"><label class="bh"><input type="checkbox" data-id="'+id+'"'+(on?' checked':'')+'><strong>'+b.name+'</strong><em>'+b.time+'</em></label><div class="bb">'+inner+'</div></section>';
+}
+
+function prevRange(d){ const from = d.wi*6+1; return from+"–"+(d.n-1); }
+
+function renderToday(){
+  const d = days[S.cur-1];
+  let h = '<div class="dayhead"><div class="marker"><small>kun</small><span>'+d.n+'</span></div><div><div class="week">'+(d.wi+1)+'-hafta: '+d.week+'</div><h2>'+d.t+'</h2></div></div>';
+  h += '<p class="schedule">Jami 6 soat. Bloklarni tartib bilan bajaring, har birini tugatgach belgilang.</p>';
+
+  /* 1. Typing */
+  h += block(d,BLOCKS[0],
+    '<ol class="steps"><li>monkeytype.com saytini oching, til: English, rejim: time 60.</li><li>30 daqiqa davomida testni qayta-qayta bajaring. Klaviaturaga qaramang.</li><li>Bugungi eng yaxshi natijani (WPM) shu yerga yozing. Maqsad: 40+.</li></ol>'+
+    '<div class="wpm"><label for="wpm">Bugungi WPM:</label><input id="wpm" type="number" min="0" max="250" inputmode="numeric" data-wpm="'+d.n+'" value="'+(S.w[d.n]||"")+'"></div>');
+
+  /* 2. Vocabulary */
+  let voc;
+  if(d.k.length){
+    const hasEx = d.k.some(t=>t[2]);
+    voc = '<p class="how">Har bir terminni: 1) o\'qing, 2) daftarga 3 marta yozing, 3) misol gapni ovoz chiqarib ayting, 4) shu termin bilan o\'zingiz yangi 1 gap tuzing.</p>';
+    voc += '<div class="tw"><table><thead><tr><th>Termin</th><th>Ma\'nosi</th>'+(hasEx?'<th>Misol</th>':'')+'</tr></thead><tbody>';
+    d.k.forEach(t=>{ voc += '<tr><td>'+esc(t[0])+'</td><td>'+esc(t[1])+'</td>'+(hasEx?'<td class="ex">'+esc(t[2])+'</td>':'')+'</tr>'; });
+    voc += '</tbody></table></div>';
+  } else {
+    voc = '<p>Bugun yangi termin yo\'q. "Lug\'at" bo\'limini oching va '+prevRange(d)+'-kunlar terminlarini takrorlang: inglizchasini o\'qib, ma\'nosini yopiq holda ayting. Bilganlaringizni "bilaman" deb belgilang.</p>';
+  }
+  h += block(d,BLOCKS[1],voc);
+
+  /* 3. Lesson */
+  let les = '<p class="how">Avval matnni diqqat bilan o\'qing (≈40 daqiqa), keyin mashqlarni daftarda yeching. Javobni faqat yechib bo\'lgach oching.</p>';
+  d.l.forEach(p=>{ les += '<p>'+p+'</p>'; });
+  les += '<h3 style="margin:16px 0 8px;font-size:1rem">Mashqlar</h3><ol class="ex">';
+  d.x.forEach(x=>{ les += '<li>'+esc(x[0])+'<details><summary>Javobni ko\'rish</summary><div class="ans">'+esc(x[1])+'</div></details></li>'; });
+  les += '</ol>';
+  h += block(d,BLOCKS[2],les);
+
+  /* 4. English */
+  let eng = '<p><b>1-soat, gapirish.</b></p><ol class="steps">';
+  if(d.p.length){
+    eng += '<li>Quyidagi iboralarning har birini 10 martadan ovoz chiqarib ayting.</li><li>O\'zingizni dispetcher deb tasavvur qilib, shu iboralarni ishlatgan holda 5 daqiqa gapiring va telefonga yozib oling.</li><li>Yozuvni tinglang, xatolarni daftarga yozing va qaytadan yozib oling.</li></ol>';
+    eng += '<div class="tw"><table><thead><tr><th>Ibora</th><th>Tarjimasi</th></tr></thead><tbody>';
+    d.p.forEach(p=>{ eng += '<tr><td style="white-space:normal">'+esc(p[0])+'</td><td>'+esc(p[1])+'</td></tr>'; });
+    eng += '</tbody></table></div>';
+  } else {
+    eng += '<li>Shu haftadagi barcha kunlarning iboralarini ("Reja" bo\'limidan kunlarni ochib) qayta ayting.</li><li>Ularni ishlatib 10 daqiqa gapiring va yozib oling.</li><li>Yozuvni tinglab, xatolarni tuzating.</li></ol>';
+  }
+  eng += '<p style="margin-top:12px"><b>2-soat, tinglash.</b></p><ol class="steps"><li>YouTube\'da qidiring: <b>'+esc(d.s)+'</b></li><li>1–2 ta video ko\'ring, iloji bo\'lsa inglizcha subtitr bilan.</li><li>Yangi 10 ta so\'z yoki iborani daftarga tarjimasi bilan yozing.</li></ol>';
+  h += block(d,BLOCKS[3],eng);
+
+  /* 5. Review */
+  h += block(d,BLOCKS[4],
+    '<ol class="steps"><li>Bugungi va kechagi terminlarni ma\'nosini yopib takrorlang (20 daqiqa).</li><li>Bugungi mashqlarda xato qilganlaringizni javobga qaramay qayta yeching (15 daqiqa).</li><li>Daftarga bugun o\'rgangan 3 ta eng muhim narsani o\'z so\'zingiz bilan yozing (10 daqiqa).</li></ol>');
+
+  if(isDone(d)) h += '<div class="complete">'+d.n+'-kun yakunlandi.'+(d.n===TOTAL?' Reja tugadi. Endi har kuni 5–10 ta ariza, 2 soat ingliz tili, 30 daqiqa typing va 1 soat takrorlashni davom ettiring.':' Ertaga '+(d.n+1)+'-kunni oching.')+'</div>';
+  h += '<div class="navrow"><button class="btn" data-go="'+(d.n-1)+'"'+(d.n===1?' disabled':'')+'>Oldingi kun</button>';
+  h += '<button class="btn primary" data-go="'+(d.n+1)+'"'+(d.n===TOTAL?' disabled':'')+'>Keyingi kun</button></div>';
+  $("#today").innerHTML = h;
+}
+
+function renderPlan(){
+  let h = "";
+  WEEKS.forEach((w,wi)=>{
+    const wd = days.filter(d=>d.wi===wi);
+    h += '<div class="wk"><h3><span>'+(wi+1)+'-hafta: '+w.t+'</span><em>'+wd.filter(isDone).length+' / '+wd.length+'</em></h3><div class="tiles">';
+    wd.forEach(d=>{
+      h += '<button class="tile'+(isDone(d)?' done':'')+(d.n===S.cur?' cur':'')+'" data-open="'+d.n+'"><b>'+d.n+'</b>'+d.t+'<span class="p">'+doneCount(d)+' / '+BLOCKS.length+(S.w[d.n]?', '+S.w[d.n]+' WPM':'')+'</span></button>';
+    });
+    h += '</div></div>';
+  });
+  $("#plan").innerHTML = h;
+}
+
+const GLOSS = [];
+days.forEach(d=>d.k.forEach(t=>GLOSS.push({en:t[0],uz:t[1],n:d.n})));
+
+function renderGloss(){
+  const q = $("#q").value.trim().toLowerCase();
+  const list = GLOSS.filter(g=>!q || (g.en+" "+g.uz).toLowerCase().includes(q));
+  const known = GLOSS.filter(g=>S.k[g.en]).length;
+  $("#glcount").textContent = known+" / "+GLOSS.length+" ta terminni bilaman";
+  $("#gllist").innerHTML = list.length ? list.map(g=>{
+    const on = !!S.k[g.en];
+    return '<label class="term'+(on?' known':'')+'"><input type="checkbox" data-term="'+esc(g.en)+'"'+(on?' checked':'')+' aria-label="Bilaman"><span><strong>'+esc(g.en)+'</strong><span>'+esc(g.uz)+'</span><small>'+g.n+'-kun</small></span></label>';
+  }).join("") : '<p class="empty">Bunday termin topilmadi. Boshqa so\'z bilan qidirib ko\'ring.</p>';
+}
+
+function renderAll(){ renderHeader(); renderToday(); renderPlan(); renderGloss(); }
+
+function showTab(name){
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected", b.dataset.tab===name ? "true":"false"));
+  ["today","plan","gloss"].forEach(t=>{ document.getElementById(t).hidden = t!==name; });
+}
+
+document.addEventListener("change", e=>{
+  const id = e.target.dataset.id, term = e.target.dataset.term;
+  if(id){ if(e.target.checked) S.c[id]=true; else delete S.c[id]; save(); renderHeader(); renderToday(); renderPlan(); }
+  if(term){ if(e.target.checked) S.k[term]=true; else delete S.k[term]; save(); renderGloss(); }
+});
+document.addEventListener("input", e=>{
+  const w = e.target.dataset && e.target.dataset.wpm;
+  if(w){ const v = e.target.value.trim(); if(v) S.w[w]=v; else delete S.w[w]; save(); renderPlan(); }
+});
+document.addEventListener("click", e=>{
+  const go = e.target.closest("[data-go]");
+  if(go && !go.disabled){ S.cur = +go.dataset.go; save(); renderToday(); renderPlan(); window.scrollTo(0,0); }
+  const op = e.target.closest("[data-open]");
+  if(op){ S.cur = +op.dataset.open; save(); renderToday(); renderPlan(); showTab("today"); window.scrollTo(0,0); }
+  const tab = e.target.closest("[data-tab]");
+  if(tab) showTab(tab.dataset.tab);
+});
+$("#q").addEventListener("input", renderGloss);
+$("#reset").addEventListener("click", ()=>{
+  if(confirm("Barcha belgilar, WPM natijalari va lug'at progressi o'chiriladi. Davom etasizmi?")){
+    S = {c:{},k:{},w:{},cur:1}; save(); renderAll(); showTab("today");
+  }
+});
+renderAll();
+</script>
+</body>
+</html>
